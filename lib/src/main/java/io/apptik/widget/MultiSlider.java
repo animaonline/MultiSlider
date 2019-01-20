@@ -146,6 +146,9 @@ public class MultiSlider extends View {
     private int defRangeColor = 0;
 
     private final TypedArray a;
+    
+    private ArrayList<PlayerTagItem> tags = null;
+    private int radius = 10;
 
     /**
      * Thumb is the main object in MultiSlider.
@@ -230,6 +233,10 @@ public class MultiSlider extends View {
          */
         public void setInvisibleThumb(boolean invisibleThumb) {
             this.isInvisible = invisibleThumb;
+        }
+        
+        public void setTags(ArrayList<PlayerTagItem> tags) {
+            this.tags = tags;
         }
 
         /**
@@ -1317,6 +1324,43 @@ public class MultiSlider extends View {
                 // float scale = mScaleMax > 0 ? (float) thumb.getValue() / (float) mScaleMax : 0;
                 thumb.getThumb().draw(canvas);
                 canvas.restore();
+            }
+        }
+        
+        int paddingLeft = getPaddingLeft();
+        int paddingRight = getPaddingRight();
+
+        Drawable thumb = getThumb();
+        int thumbWidth = thumb.getIntrinsicWidth();
+
+        float width = getMeasuredWidth() - paddingLeft - paddingRight;
+
+        if (tags != null && tags.size() != 0) {
+            for (PlayerTagItem tag : tags) {
+                float y = getMeasuredHeight() / 2;
+                float x = width / 100 * tag.XOffset + thumbWidth;
+
+                if (x < width / 2) {
+                } else {
+                }
+
+                if (tag.fillPaint == null) {
+                    tag.fillPaint = new Paint();
+                    tag.fillPaint.setColor(tag.tagTintColor);
+                    tag.fillPaint.setAntiAlias(true);
+                }
+
+                canvas.drawCircle(x, y, 10, tag.fillPaint);
+
+                if (tag.strokePaint == null) {
+                    tag.strokePaint = new Paint();
+                    tag.strokePaint.setStrokeWidth(1);
+                    tag.strokePaint.setColor(Color.WHITE);
+                    tag.strokePaint.setStyle(Paint.Style.STROKE);
+                    tag.strokePaint.setAntiAlias(true);
+                }
+
+                canvas.drawCircle(x, y, radius, tag.strokePaint);
             }
         }
     }
